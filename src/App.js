@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { GlobalStyle } from './components/GlobalStyle';
 import Searchbar from './components/Searchbar/Searchbar';
+import ImageGallery from './components/ImageGallery/ImageGallery';
+import Modal from './components/Modal/Modal';
+import Button from './components/Button/Button';
 
 class App extends Component {
   render() {
@@ -8,6 +11,9 @@ class App extends Component {
       <div>
         <GlobalStyle />
         <Searchbar onClick={this.onSubmit} />
+        <ImageGallery />
+        <Button />
+        <Modal />
       </div>
     );
   }
