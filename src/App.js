@@ -6,14 +6,37 @@ import Modal from './components/Modal/Modal';
 import Button from './components/Button/Button';
 
 class App extends Component {
+  state = {
+    showModal: false,
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
   render() {
+    const { showModal } = this.state;
+
     return (
       <div>
         <GlobalStyle />
         <Searchbar onClick={this.onSubmit} />
         <ImageGallery />
         <Button />
-        <Modal />
+        <button type="button" onClick={this.toggleModal}>
+          Открыть модалку
+        </button>
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <img src="" alt="" />
+            <button type="button" onClick={this.toggleModal}>
+              Закрыть
+            </button>
+          </Modal>
+        )}
+        ;
       </div>
     );
   }
