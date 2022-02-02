@@ -20,6 +20,7 @@ const ImageGallery = ({ images, onClick }) => {
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
+      index: PropTypes.number.isRequired,
       tags: PropTypes.string,
       webformatURL: PropTypes.string,
       largeImageURL: PropTypes.string,

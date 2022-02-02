@@ -2,22 +2,19 @@ import React, { Component } from 'react';
 import { GlobalStyle } from './components/GlobalStyle';
 import Searchbar from './components/Searchbar/Searchbar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
+import Loader from './components/Loader/Loader';
 import Modal from './components/Modal/Modal';
 import Button from './components/Button/Button';
+import ApiService from './components/apiService';
+
+const newApiService = new ApiService();
 
 class App extends Component {
   state = {
+    loading: false,
     showModal: false,
     images: [],
   };
-
-  componentDidMount() {
-    fetch(
-      'https://pixabay.com/api/?q=cat&page=1&key=your_key&image_type=photo&orientation=horizontal&per_page=12',
-    )
-      .then(res => res.json())
-      .then(images => this.setState({ images }));
-  }
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({
@@ -26,13 +23,19 @@ class App extends Component {
   };
 
   render() {
-    const { images, showModal } = this.state;
+    const { images, showModal, loading } = this.state;
 
     return (
       <div>
         <GlobalStyle />
         <Searchbar onClick={this.onSubmit} />
-        {this.state.images && <ImageGallery images={images} />}
+        {loading && <Loader />}
+        {images && (
+          <ImageGallery
+            onClick={this.toggleModal}
+            images={images}
+          ></ImageGallery>
+        )}
         <Button />
         <button type="button" onClick={this.toggleModal}>
           Открыть модалку
