@@ -22,13 +22,15 @@ class App extends Component {
     }));
   };
 
+  handleFormSubmit = () => {};
+
   render() {
     const { images, showModal, loading } = this.state;
 
     return (
       <div>
         <GlobalStyle />
-        <Searchbar onClick={this.onSubmit} />
+        <Searchbar onSubmit={this.handleFormSubmit} />
         {loading && <Loader />}
         {images && (
           <ImageGallery
