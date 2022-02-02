@@ -1,17 +1,31 @@
-// import PropTypes from 'prop-types';
-import ImageGalleryItem from './ImageGalleryItem';
+import PropTypes from 'prop-types';
+import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
 
-function ImageGallery() {
+const ImageGallery = ({ images, onClick }) => {
   return (
     <ImageGalleryList>
-      <ImageGalleryItem />
+      {images.map(({ tags, webformatURL, largeImageURL }, index) => (
+        <ImageGalleryItem
+          key={index}
+          src={webformatURL}
+          alt={tags}
+          onClick={() => onClick(largeImageURL, tags)}
+        />
+      ))}
     </ImageGalleryList>
   );
-}
+};
 
-// ImageGallery.propTypes = {
-//         id: PropTypes.number.isRequired,
-// };
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      tags: PropTypes.string,
+      webformatURL: PropTypes.string,
+      largeImageURL: PropTypes.string,
+    }),
+  ),
+  onClick: PropTypes.func.isRequired,
+};
 
 export default ImageGallery;

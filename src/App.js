@@ -8,7 +8,16 @@ import Button from './components/Button/Button';
 class App extends Component {
   state = {
     showModal: false,
+    images: [],
   };
+
+  componentDidMount() {
+    fetch(
+      'https://pixabay.com/api/?q=cat&page=1&key=your_key&image_type=photo&orientation=horizontal&per_page=12',
+    )
+      .then(res => res.json())
+      .then(images => this.setState({ images }));
+  }
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({
@@ -17,13 +26,13 @@ class App extends Component {
   };
 
   render() {
-    const { showModal } = this.state;
+    const { images, showModal } = this.state;
 
     return (
       <div>
         <GlobalStyle />
         <Searchbar onClick={this.onSubmit} />
-        <ImageGallery />
+        {this.state.images && <ImageGallery images={images} />}
         <Button />
         <button type="button" onClick={this.toggleModal}>
           Открыть модалку
