@@ -2,31 +2,29 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
 
-const ImageGallery = ({ images, onClick }) => {
+export default function ImageGallery({ images, onClick }) {
   return (
     <ImageGalleryList>
-      {images.map(({ tags, webformatURL, largeImageURL }, index) => (
-        <ImageGalleryItem
-          key={index}
-          src={webformatURL}
-          alt={tags}
-          onClick={() => onClick(largeImageURL, tags)}
-        />
-      ))}
+      {images.map(({ id, tags, webformatURL, largeImageURL }) => {
+        return (
+          <ImageGalleryItem
+            key={id}
+            data={{ id, webformatURL, tags, largeImageURL }}
+            imgForModal={() => {
+              onClick(largeImageURL);
+            }}
+          />
+        );
+      })}
     </ImageGalleryList>
   );
-};
+}
 
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
-      index: PropTypes.number.isRequired,
-      tags: PropTypes.string,
-      webformatURL: PropTypes.string,
-      largeImageURL: PropTypes.string,
+      id: PropTypes.number.isRequired,
     }),
   ),
   onClick: PropTypes.func.isRequired,
 };
-
-export default ImageGallery;

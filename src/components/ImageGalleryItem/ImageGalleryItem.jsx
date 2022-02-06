@@ -4,18 +4,27 @@ import {
   ImageGalleryListItemImage,
 } from './ImageGalleryItem.styled';
 
-const ImageGalleryItem = ({ src, alt, onClick }) => {
+const ImageGalleryItem = ({
+  imgForModal,
+  data: { webformatURL, largeImageURL, tags },
+}) => {
   return (
-    <ImageGalleryListItem>
-      <ImageGalleryListItemImage src={src} alt={alt} onClick={onClick} />
+    <ImageGalleryListItem
+      key={webformatURL}
+      onClick={() => imgForModal(largeImageURL)}
+    >
+      <ImageGalleryListItemImage src={webformatURL} alt={tags} />
     </ImageGalleryListItem>
   );
 };
 
 ImageGalleryItem.propTypes = {
-  alt: PropTypes.string,
-  src: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    webformatURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
+  }),
+  imgForModal: PropTypes.func.isRequired,
 };
 
 export default ImageGalleryItem;

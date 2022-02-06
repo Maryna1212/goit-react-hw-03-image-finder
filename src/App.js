@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { GlobalStyle } from './components/GlobalStyle';
+import { ToastContainer } from 'react-toastify';
 import Searchbar from './components/Searchbar/Searchbar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import Loader from './components/Loader/Loader';
@@ -11,27 +12,61 @@ const newApiService = new ApiService();
 
 class App extends Component {
   state = {
+    imageName: '',
     loading: false,
     showModal: false,
-    images: [],
+    images: null,
+    status: 'idle',
+    error: null,
+    imgModal: null,
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    const prevName = prevState.imageName;
+    const nextName = this.state.imageName;
+
+    if (prevName !== nextName) {
+      this.setState({ status: 'pending' });
+
+      newApiService.query = nextName;
+      newApiService.resetPage();
+      newApiService
+        .fetchImages()
+        .then(({ hits }) => {
+          this.setState({ images: hits });
+
+          if (hits.length === 0) {
+            this.setState({ images: null });
+            Promise.reject(
+              new Error(`Cannot find the image on your request ${nextName}`),
+            );
+          }
+          return;
+        })
+        // .then(images => this.setState({ images, status: 'resolved' }))
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+  }
+
   toggleModal = () => {
-    this.setState(({ showModal }) => ({
+    this.setState(({ showModal, largeImageURL }) => ({
       showModal: !showModal,
+      imgModal: largeImageURL,
     }));
   };
 
-  handleFormSubmit = () => {};
+  handleFormSubmit = imageName => {
+    this.setState({ imageName });
+  };
 
   render() {
-    const { images, showModal, loading } = this.state;
+    const { images, showModal, status, imgModal } = this.state;
 
     return (
       <div>
         <GlobalStyle />
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {loading && <Loader />}
+        {status === 'pending' && <Loader />}
         {images && (
           <ImageGallery
             onClick={this.toggleModal}
@@ -42,9 +77,10 @@ class App extends Component {
         <button type="button" onClick={this.toggleModal}>
           Открыть модалку
         </button>
+        <ToastContainer position="top-center" autoClose={3000} />
         {showModal && (
           <Modal onClose={this.toggleModal}>
-            <img src="" alt="" />
+            <img src={imgModal} alt="" />
             <button type="button" onClick={this.toggleModal}>
               Закрыть
             </button>

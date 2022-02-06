@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import {
   SearchbarHeader,
   SearchForm,
@@ -20,6 +21,11 @@ export default class Searchbar extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
+    if (this.state.imageName.trim() === '') {
+      return toast.error('Enter the name of image!');
+    }
+
+    this.props.onSubmit(this.state.imageName);
     this.setState({ imageName: '' });
   };
 
