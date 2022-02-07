@@ -1,12 +1,15 @@
 import { BallTriangle } from 'react-loader-spinner';
 import { LoaderContainer } from './Loader.styled';
 
-const Loader = () => {
+export default function Loader() {
   return (
     <LoaderContainer>
-      <BallTriangle color={'inherit'} height={60} width={60} />
+      <BallTriangle
+        color={'inherit'}
+        height={100}
+        width={100}
+        textAlign="center"
+      />
     </LoaderContainer>
   );
-};
-
-export default Loader;
+}

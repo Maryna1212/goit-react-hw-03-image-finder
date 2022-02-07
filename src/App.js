@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { GlobalStyle } from './components/GlobalStyle';
-import { ToastContainer } from 'react-toastify';
+// import { GlobalStyle } from './components/GlobalStyle';
+import Swal from 'sweetalert2';
 import Searchbar from './components/Searchbar/Searchbar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import Loader from './components/Loader/Loader';
@@ -16,7 +16,6 @@ class App extends Component {
     loading: false,
     showModal: false,
     images: null,
-    status: 'idle',
     error: null,
     imgModal: null,
   };
@@ -26,7 +25,7 @@ class App extends Component {
     const nextName = this.state.imageName;
 
     if (prevName !== nextName) {
-      this.setState({ status: 'pending' });
+      this.setState({ loading: true });
 
       newApiService.query = nextName;
       newApiService.resetPage();
@@ -36,21 +35,38 @@ class App extends Component {
           this.setState({ images: hits });
 
           if (hits.length === 0) {
-            this.setState({ images: null });
-            Promise.reject(
-              new Error(`Cannot find the image on your request ${nextName}`),
-            );
+            Swal.fire(`Cannot find the image on your request ${nextName}`);
+            return;
           }
-          return;
         })
-        // .then(images => this.setState({ images, status: 'resolved' }))
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => this.setState({ error }))
+        .finally(() => this.setState({ loading: false }));
     }
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal, largeImageURL }) => ({
-      showModal: !showModal,
+  fetchAdditionalImages = () => {
+    const { images, imageName } = this.state;
+
+    this.setState({
+      loading: true,
+      scroll: true,
+    });
+    return newApiService
+      .fetchImages()
+      .then(({ hits }) => {
+        this.setState({ images: [...images, ...hits] });
+        if (hits.length === 0) {
+          Swal.fire(`Cannot find the image on your request ${imageName}`);
+          return;
+        }
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ loading: false }));
+  };
+
+  toggleModal = largeImageURL => {
+    this.setState(prevState => ({
+      showModal: !prevState.showModal,
       imgModal: largeImageURL,
     }));
   };
@@ -60,63 +76,27 @@ class App extends Component {
   };
 
   render() {
-    const { images, showModal, status, imgModal } = this.state;
+    const { images, showModal, loading, imgModal } = this.state;
 
     return (
-      <div>
-        <GlobalStyle />
+      <>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {status === 'pending' && <Loader />}
+        {loading && <Loader />}
         {images && (
           <ImageGallery
             onClick={this.toggleModal}
             images={images}
           ></ImageGallery>
         )}
-        <Button />
-        <button type="button" onClick={this.toggleModal}>
-          Открыть модалку
-        </button>
-        <ToastContainer position="top-center" autoClose={3000} />
+        {images && <Button onClick={this.fetchAdditionalImages} />}
         {showModal && (
           <Modal onClose={this.toggleModal}>
             <img src={imgModal} alt="" />
-            <button type="button" onClick={this.toggleModal}>
-              Закрыть
-            </button>
           </Modal>
         )}
-        ;
-      </div>
+      </>
     );
   }
 }
 
 export default App;
-
-// ====================================
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;

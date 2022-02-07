@@ -6,4 +6,7 @@ export const LoaderContainer = styled.div`
   fill: blue;
   margin-left: auto;
   margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

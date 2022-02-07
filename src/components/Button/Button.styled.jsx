@@ -25,3 +25,8 @@ export const ButtonLoad = styled.button`
     background-color: #303f9f;
   }
 `;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;

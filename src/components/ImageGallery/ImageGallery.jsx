@@ -5,14 +5,14 @@ import { ImageGalleryList } from './ImageGallery.styled';
 export default function ImageGallery({ images, onClick }) {
   return (
     <ImageGalleryList>
-      {images.map(({ id, tags, webformatURL, largeImageURL }) => {
+      {images.map(({ tags, webformatURL, largeImageURL }, index) => {
         return (
           <ImageGalleryItem
-            key={id}
-            data={{ id, webformatURL, tags, largeImageURL }}
+            key={index}
             imgForModal={() => {
               onClick(largeImageURL);
             }}
+            data={{ index, webformatURL, tags, largeImageURL }}
           />
         );
       })}
@@ -23,7 +23,9 @@ export default function ImageGallery({ images, onClick }) {
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      tags: PropTypes.string,
+      webformatURL: PropTypes.string,
+      largeImageURL: PropTypes.string,
     }),
   ),
   onClick: PropTypes.func.isRequired,

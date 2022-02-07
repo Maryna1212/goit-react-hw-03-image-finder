@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import {
   SearchbarHeader,
   SearchForm,
@@ -22,7 +22,9 @@ export default class Searchbar extends Component {
     event.preventDefault();
 
     if (this.state.imageName.trim() === '') {
-      return toast.error('Enter the name of image!');
+      return Swal.fire(
+        `There are no image on your request ${this.state.imageName}. Please try again!`,
+      );
     }
 
     this.props.onSubmit(this.state.imageName);

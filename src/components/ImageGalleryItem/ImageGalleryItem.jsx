@@ -4,10 +4,10 @@ import {
   ImageGalleryListItemImage,
 } from './ImageGalleryItem.styled';
 
-const ImageGalleryItem = ({
+export default function ImageGalleryItem({
   imgForModal,
   data: { webformatURL, largeImageURL, tags },
-}) => {
+}) {
   return (
     <ImageGalleryListItem
       key={webformatURL}
@@ -16,7 +16,7 @@ const ImageGalleryItem = ({
       <ImageGalleryListItemImage src={webformatURL} alt={tags} />
     </ImageGalleryListItem>
   );
-};
+}
 
 ImageGalleryItem.propTypes = {
   data: PropTypes.shape({
@@ -26,5 +26,3 @@ ImageGalleryItem.propTypes = {
   }),
   imgForModal: PropTypes.func.isRequired,
 };
-
-export default ImageGalleryItem;

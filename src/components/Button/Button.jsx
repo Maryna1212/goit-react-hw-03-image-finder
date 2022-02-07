@@ -1,18 +1,16 @@
-// import PropTypes from 'prop-types';
-import { ButtonLoad } from './Button.styled';
+import PropTypes from 'prop-types';
+import { ButtonLoad, ButtonContainer } from './Button.styled';
 
-const Button = () => (
-  <div class="container">
-    <ButtonLoad type="button" data-action="load-more">
-      <span
-        class="lds-dual-ring spinner is-hidden"
-        role="status"
-        aria-hidden="true"
-      ></span>
+export default function Button({ onClick }) {
+  return (
+    <ButtonContainer>
+      <ButtonLoad type="button" onClick={() => onClick()}>
+        Load more
+      </ButtonLoad>
+    </ButtonContainer>
+  );
+}
 
-      <span>Load more</span>
-    </ButtonLoad>
-  </div>
-);
-
-export default Button;
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
