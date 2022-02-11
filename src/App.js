@@ -13,6 +13,7 @@ const newApiService = new ApiService();
 class App extends Component {
   state = {
     imageName: '',
+    page: 1,
     loading: false,
     showModal: false,
     images: null,
@@ -29,18 +30,7 @@ class App extends Component {
 
       newApiService.query = nextName;
       newApiService.resetPage();
-      newApiService
-        .fetchImages()
-        .then(({ hits }) => {
-          this.setState({ images: hits });
-
-          if (hits.length === 0) {
-            Swal.fire(`Cannot find the image on your request ${nextName}`);
-            return;
-          }
-        })
-        .catch(error => this.setState({ error }))
-        .finally(() => this.setState({ loading: false }));
+      this.fetchAdditionalImages();
     }
   }
 
@@ -54,7 +44,8 @@ class App extends Component {
     return newApiService
       .fetchImages()
       .then(({ hits }) => {
-        this.setState({ images: [...images, ...hits] });
+        const prevStateImages = images ? images : [];
+        this.setState({ images: [...prevStateImages, ...hits] });
         if (hits.length === 0) {
           Swal.fire(`Cannot find the image on your request ${imageName}`);
           return;
